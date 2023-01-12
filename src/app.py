@@ -25,7 +25,7 @@ def load_file(fileName=False):
         print('ファイル名が指定されていません', file = sys.stderr)
         sys.exit(1)
     try:
-        if ext is '.csv':
+        if ext == '.csv':
             print('CSVを読み込みます')
             df = pd.read_csv(fileName)
         else:
