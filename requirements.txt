@@ -2,3 +2,6 @@ numpy
 pandas
 openpyxl
 xlrd
+fastapi
+sqlmodel
+pyper

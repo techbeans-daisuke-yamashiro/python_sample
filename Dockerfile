@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.10
 USER root
 
 RUN apt-get update
@@ -11,8 +11,9 @@ ENV LC_ALL ja_JP.UTF-8
 ENV TZ JST-9
 ENV TERM xterm
 
+COPY requirements.txt /tmp
 RUN apt-get install -y vim less
 RUN pip install --upgrade pip
 RUN pip install --upgrade setuptools
+RUN pip install -r /tmp/requirements.txt
 
-RUN python -m pip install pandas numpy fastapi sqlmodel

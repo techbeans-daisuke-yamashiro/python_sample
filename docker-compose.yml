@@ -9,3 +9,4 @@ services:
     volumes:
       - ./data:/root/data
       - ./src:/root/src
+      - ./requirements.txt:/root/requirements.txt
