@@ -4,4 +4,4 @@ openpyxl
 xlrd
 fastapi
 sqlmodel
-pyper
+rpy2
