@@ -1,7 +1,9 @@
+autopep8
 numpy
 pandas
 openpyxl
 xlrd
 fastapi
+uvicorn
 sqlmodel
 rpy2

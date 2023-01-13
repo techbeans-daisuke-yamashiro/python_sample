@@ -1,12 +1,40 @@
 version: '3'
+networks:
+  default:
 services:
-  python3:
-    restart: always
-    build: .
-    container_name: 'python'
+  mysql:
+    container_name: mysql
     working_dir: '/root/'
-    tty: true
+    build: 
+      context: .
+      dockerfile: ./container/mysql/Dockerfile
+    networks:
+      - default
+    ports:
+      - "3306:3306"
+    environment:
+      TZ: "Asia/Tokyo"
     volumes:
-      - ./data:/root/data
+      - ./data:/var/lib/data
+  nginx:
+    container_name: nginx
+    working_dir: '/root/'
+    build: 
+      context: .
+      dockerfile: ./container/nginx/Dockerfile
+    networks:
+      - default
+    ports:
+      - "80:80"
+  python:
+    restart: always
+    build: 
+      context: .
+      dockerfile: ./container/python/Dockerfile
+    container_name: 'python'
+    tty: true
+    networks:
+      - default
+    volumes:
+      - ./container/python/data:/root/data
       - ./src:/root/src
-      - ./requirements.txt:/root/requirements.txt
