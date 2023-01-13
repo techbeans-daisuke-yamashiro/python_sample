@@ -3,6 +3,7 @@
 # Note: PS1 and umask are already set in /etc/profile. You should not
 # need this unless you want different defaults for root.
 umask 022
+PS1='\[\e[0m\][\[\e[0;32m\]\u\[\e[0m\]@\[\e[0m\]\H \[\e[0;38;5;33m\]\W\[\e[0m\]]$ '
 
 # You may uncomment the following lines if you want `ls' to be colorized:
  LS_OPTIONS='--color=auto'

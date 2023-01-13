@@ -27,14 +27,15 @@ services:
     ports:
       - "80:80"
   python:
+    container_name: 'python'
     restart: always
     build: 
       context: .
       dockerfile: ./container/python/Dockerfile
-    container_name: 'python'
+    working_dir: '/app/'
     tty: true
     networks:
       - default
     volumes:
-      - ./container/python/data:/root/data
-      - ./src:/root/src
+      - ./src:/app
+      - ./container/python/data:/app/data
