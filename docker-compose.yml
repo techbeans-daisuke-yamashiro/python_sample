@@ -16,17 +16,9 @@ services:
       TZ: "Asia/Tokyo"
     volumes:
       - ./data:/var/lib/data
-  nginx:
-    container_name: nginx
-    working_dir: '/root/'
-    build: 
-      context: .
-      dockerfile: ./container/nginx/Dockerfile
-    networks:
-      - default
-    ports:
-      - "80:80"
   python:
+    depends_on:
+      - mysql
     container_name: 'python'
     restart: always
     build: 
@@ -36,6 +28,19 @@ services:
     tty: true
     networks:
       - default
+    ports:
+      - "8000:8000"
     volumes:
       - ./src:/app
       - ./container/python/data:/app/data
+  nginx:
+    depends_on:
+      - python
+    container_name: nginx
+    build: 
+      context: .
+      dockerfile: ./container/nginx/Dockerfile
+    networks:
+      - default
+    ports:
+      - "80:80"

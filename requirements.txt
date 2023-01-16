@@ -1,6 +1,7 @@
 autopep8
 numpy
 pandas
+mysqlclient
 openpyxl
 xlrd
 fastapi
