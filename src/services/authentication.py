@@ -1,6 +1,6 @@
 import bcrypt
 from passlib.context import CryptContext
-from database.models import User
+from database.models.user import User
 
 password_context=CryptContext(schemes=["bcrypt"], deprecated="auto")
 

@@ -1,7 +1,7 @@
 from logging.config import fileConfig
 
 from alembic import context
-from database.models import User, Item, UserBase, ItemBase
+from database.models.user import User, Item, UserBase, ItemBase
 from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel  # 追加
 
