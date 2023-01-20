@@ -5,6 +5,10 @@ mysqlclient
 openpyxl
 xlrd
 fastapi
+fastapi-users
+fastapi-users-db-sqlmodel
 uvicorn
 sqlmodel
 rpy2
+alembic
+passlib[bcrypt]
