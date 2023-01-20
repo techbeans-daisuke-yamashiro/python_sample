@@ -13,6 +13,16 @@ class ItemBase(SQLModel):
     updated_at: datetime = Field(default_factory=datetime.
         utcnow,nullable=False)
 
+class ItemCreate(ItemBase):
+    pass
+
+class ItemRead(ItemBase):
+    id: int
+
+class ItemUpdate(ItemBase):
+    id: Optional[int] = None
+    name: Optional[str] = None
+    price: Optional[int] = None
 
 ##Table Model
 class Item(ItemBase, table=True):
@@ -32,14 +42,3 @@ class Item(ItemBase, table=True):
             statement = select(self).where(self.country == country)
             data = session.exec(statement).all()
         return data
-
-class ItemCreate(ItemBase):
-    pass
-
-class ItemRead(ItemBase):
-    id: int
-
-class ItemUpdate(ItemBase):
-    id: Optional[int] = None
-    name: Optional[str] = None
-    price: Optional[int] = None

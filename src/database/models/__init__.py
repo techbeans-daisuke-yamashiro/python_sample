@@ -1,5 +1,8 @@
-from user import User
-from item import Item
+from .user import User
+from .item import Item
 
-User = User()
-Item = Item()
+class User(User):
+    pass
+
+class Item(Item):
+    pass

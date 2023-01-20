@@ -12,6 +12,17 @@ class UserBase(SQLModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow,
         nullable=False)
 
+class UserCreate(UserBase):
+    pass
+
+class UserRead(UserBase):
+    id: int
+
+class UserUpdate(UserBase):
+    id: Optional[int] = None
+    name: Optional[str] = None
+    email: Optional[str] = None
+
 ##Table Model
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -23,14 +34,3 @@ class User(UserBase, table=True):
             statement = select(self).where(self.id == id)
             data = session.exec(statement).first()
         return data
-
-class UserCreate(UserBase):
-    pass
-
-class UserRead(UserBase):
-    id: int
-
-class UserUpdate(UserBase):
-    id: Optional[int] = None
-    name: Optional[str] = None
-    email: Optional[str] = None

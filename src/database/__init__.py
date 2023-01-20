@@ -1,6 +1,6 @@
 #Databse Handler
 from config import DATABASE_URL
-from .models import Item,User
+from .models import Item, User
 
 from typing import Optional
 from sqlmodel import SQLModel, Session, create_engine
