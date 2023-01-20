@@ -27,7 +27,7 @@ class Item(ItemBase, table=True):
         return data
 
     @classmethod
-    def select_by_country(self, engine, id):
+    def select_by_country(self, engine, country):
         with Session(engine) as session:
             statement = select(self).where(self.country == country)
             data = session.exec(statement).all()
