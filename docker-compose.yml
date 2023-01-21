@@ -15,7 +15,7 @@ services:
     environment:
       TZ: "Asia/Tokyo"
     volumes:
-      - ./data:/var/lib/data
+      - ./data/mysql:/var/lib/mysql
   python:
     depends_on:
       - mysql
@@ -32,7 +32,6 @@ services:
       - "8000:8000"
     volumes:
       - ./src:/app
-      - ./docker/python/data:/app/data
   nginx:
     depends_on:
       - python
