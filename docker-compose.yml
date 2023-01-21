@@ -7,7 +7,7 @@ services:
     working_dir: '/root/'
     build: 
       context: .
-      dockerfile: ./container/mysql/Dockerfile
+      dockerfile: ./docker/mysql/Dockerfile
     networks:
       - default
     ports:
@@ -23,7 +23,7 @@ services:
     restart: always
     build: 
       context: .
-      dockerfile: ./container/python/Dockerfile
+      dockerfile: ./docker/python/Dockerfile
     working_dir: '/app/'
     tty: true
     networks:
@@ -32,14 +32,14 @@ services:
       - "8000:8000"
     volumes:
       - ./src:/app
-      - ./container/python/data:/app/data
+      - ./docker/python/data:/app/data
   nginx:
     depends_on:
       - python
     container_name: nginx
     build: 
       context: .
-      dockerfile: ./container/nginx/Dockerfile
+      dockerfile: ./docker/nginx/Dockerfile
     networks:
       - default
     ports:
