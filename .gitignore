@@ -133,3 +133,6 @@ data/
 
 # R
 .R*
+
+# ignore temporary backup
+*.bak
