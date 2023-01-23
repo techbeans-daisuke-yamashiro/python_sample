@@ -22,6 +22,8 @@ def create_db_and_tables():
 
 #Create Seed Data
 def create_seed_data():
+    pass
+"""
     seeding = False
     users = None
     items = None
@@ -54,3 +56,4 @@ def create_seed_data():
         else:
             print("skipped seeding table \'item\'")
         session.commit()
+"""
