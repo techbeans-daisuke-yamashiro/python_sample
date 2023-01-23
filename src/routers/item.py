@@ -40,7 +40,7 @@ def create_item(item: ItemCreate, session: Session = Depends(get_session)):
 
 @ItemRouter.delete('/{id}/delete')
 def delete_item(id:int, session: Session = Depends(get_session)):
-    target_item = session.get(Item, id)
+    target_item = session.get(Item, id,)
     session.delete(target_item)
     session.commit()
     return {'message':'operation done.'}
