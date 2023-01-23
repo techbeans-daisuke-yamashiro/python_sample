@@ -1,5 +1,6 @@
-#Model package skelton
+#__init__.py:
+# Model package entrypoint
 #add models like:
-#from .module import Modelname
+#from .modulename import TableModelName
 from .user import User
 from .item import Item

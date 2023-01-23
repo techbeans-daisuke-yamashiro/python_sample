@@ -9,8 +9,11 @@ class UserBase(SQLModel):
     name: str = Field(index=True)
     email: str = Field(index=True)
     created_at: datetime = Field(default=datetime.utcnow(),nullable=False)
-    updated_at: datetime = Field(default_factory=datetime.utcnow,
+    updated_at: datetime = Field(default=datetime.utcnow(),
+        sa_column_kwargs={'onupdate': datetime.now()},
         nullable=False)
+    deleted: bool = Field(default=False)
+    seeded:  bool = Field(default=False)
 
 class UserCreate(UserBase):
     pass
@@ -35,3 +38,9 @@ class User(UserBase, table=True):
             statement = select(self).where(self.id == id)
             data = session.exec(statement).first()
         return data
+
+    @classmethod
+    def get_count_seeded(self,engine):
+        session=Session(engine)
+        return session.query(self).where(self.seeded==True).count()
+

@@ -26,5 +26,9 @@ RUN pip install -r /tmp/requirements.txt
 RUN pip install --upgrade pip
 RUN pip install --upgrade setuptools
 
+#.envファイルの準備
+COPY ./src/.env.example /app/.env
+
 #Uvicornの起動
 CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
+#CMD ["uvicorn", "--env-file", "uvicorn.ini", "main:app"]
