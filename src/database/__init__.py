@@ -4,11 +4,14 @@ from .models import Item, User
 
 from typing import Optional
 from sqlmodel import SQLModel, Session, create_engine
-
+from starlette.requests import Request
 
 #Connecting to Database
 engine = create_engine(DATABASE_URL, echo=DB_ECHO) 
 
+def get_connection(request: Request):
+    return request.state.connection
+    
 def get_session():
     with Session(engine) as session:
         yield session
