@@ -12,3 +12,4 @@ sqlmodel
 rpy2
 alembic
 passlib[bcrypt]
+networkx

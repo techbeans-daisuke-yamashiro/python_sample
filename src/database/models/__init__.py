@@ -3,23 +3,24 @@
 #add models like:
 #from .modulename import TableModelName
 from datetime import datetime
-from typing import Optional
-from sqlmodel import Field, SQLModel, Session
-from sqlalchemy import event, orm
+from typing import Optional,Union
+from sqlmodel import Field, SQLModel
 
-# ModelBase
-class ModelBase(SQLModel):
+# CommonModel
+class CommonModel(SQLModel):
     created_at: Optional[datetime] = Field(default=datetime.utcnow(),nullable=False)
     updated_at: Optional[datetime] = Field(default=datetime.utcnow(),
         sa_column_kwargs={'onupdate': datetime.now},
         nullable=False)
     deleted_at: Optional[datetime] = Field(nullable=True)
     seeded:  bool = Field(default=False)
-    
+
+    class Config:
+        orm_mode = True
 
 # User model
 ##Base model
-class UserBase(ModelBase):
+class UserBase(CommonModel):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True)
     email: str = Field(index=True)
@@ -43,7 +44,7 @@ class User(UserBase, table=True):
 
 # Item model
 ##Base model
-class ItemBase(ModelBase):
+class ItemBase(CommonModel):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: Optional[str] = Field(index=True)
     price: Optional[int] = Field(default=None,nullable=False)
@@ -51,8 +52,12 @@ class ItemBase(ModelBase):
 
 
 class ItemCreate(ItemBase):
-    pass
-
+    id: Union[int, None] = None
+    created_at: Union[datetime, None] = None
+    updated_at: Union[datetime, None] = None
+    deleted_at: Union[datetime, None] = None
+    seeded: Union[bool, None] = None
+ 
 class ItemRead(ItemBase):
     id: int
 
@@ -69,23 +74,6 @@ class Item(ItemBase, table=True):
 
 #event listener for soft deleting
 """
-@event.listens_for(Session, "do_orm_execute")
-def _add_filtering_deleted_at(execute_state):
-    論理削除用のfilterを自動的に適用する
-    以下のようにすると、論理削除済のデータも含めて取得可能
-    query(...).filter(...).execution_options(include_deleted=True)
-    if (
-        execute_state.is_select
-        and not execute_state.is_column_load
-        and not execute_state.is_relationship_load
-        and not execute_state.execution_options.get("include_deleted", False)
-    ):
-        execute_state.statement = execute_state.statement.options(
-            orm.with_loader_criteria(
-                ModelBase,
-                lambda cls: cls.deleted_at.is_(None),
-                include_aliases=True,
-            )
-        )
-
+Queryを利用するController側から'WHERE deleted_at NOT NULL'でフィルタするように
+したほうが建設的、との結論に至ったので
 """
