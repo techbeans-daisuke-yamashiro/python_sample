@@ -6,24 +6,19 @@ from datetime import datetime
 from typing import Optional,Union
 from sqlmodel import Field, SQLModel
 
-# CommonModel
-class CommonModel(SQLModel):
+# User model
+##Base model
+class UserBase(SQLModel):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = Field()
+    email: str = Field()
+    password: str = Field()
     created_at: Optional[datetime] = Field(default=datetime.utcnow(),nullable=False)
     updated_at: Optional[datetime] = Field(default=datetime.utcnow(),
         sa_column_kwargs={'onupdate': datetime.now},
         nullable=False)
     deleted_at: Optional[datetime] = Field(nullable=True)
     seeded:  bool = Field(default=False)
-
-    class Config:
-        orm_mode = True
-
-# User model
-##Base model
-class UserBase(CommonModel):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    name: str = Field(index=True)
-    email: str = Field(index=True)
 
 class UserCreate(UserBase):
     pass
@@ -44,11 +39,18 @@ class User(UserBase, table=True):
 
 # Item model
 ##Base model
-class ItemBase(CommonModel):
+class ItemBase(SQLModel):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: Optional[str] = Field(index=True)
     price: Optional[int] = Field(default=None,nullable=False)
     country: Optional[str] = Field(index=True,nullable=True)
+    created_at: Optional[datetime] = Field(default=datetime.utcnow(),
+        nullable=False)
+    updated_at: Optional[datetime] = Field(default=datetime.utcnow(),
+        sa_column_kwargs={'onupdate': datetime.now},
+        nullable=False)
+    deleted_at: Optional[datetime] = Field(nullable=True)
+    seeded:  bool = Field(default=False)
 
 
 class ItemCreate(ItemBase):

@@ -18,6 +18,13 @@ class ItemNotFoundError(ApiError):
     status_code = 404
     detail={'Item Not Found'}
 
+class InvalidPasswordError(ApiError):
+    status_code = 401
+    detail={'Invalid Password'}
+
+class UserNotFoundError(ApiError):
+    status_code = 404
+    detail={'Item Not Found'}
 
 def error_response(error_types: List[Type[ApiError]]) -> dict:
     # error_types に列挙した ApiError を OpenAPI の書式で定義する

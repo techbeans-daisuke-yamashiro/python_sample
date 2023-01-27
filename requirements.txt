@@ -5,8 +5,7 @@ mysqlclient
 openpyxl
 xlrd
 fastapi
-fastapi-users
-fastapi-users-db-sqlmodel
+fastapi-jwt-auth[asymmetric]
 uvicorn
 sqlmodel
 rpy2
