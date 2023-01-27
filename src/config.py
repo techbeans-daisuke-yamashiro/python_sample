@@ -7,6 +7,9 @@ VERSION = "0.0.0"
 API_PREFIX = "/api"
 
 SECRET_KEY = config("SECRET_KEY", cast=Secret, default="CHANGEME")
+ACCESS_TOKEN_EXPIRES_IN=config("ACCESS_TOKEN_EXPIRES_IN",cast=int,default=60)
+REFRESH_TOKEN_EXPIRES_IN=config("REFRESH_TOKEN_EXPIRES_IN",cast=int,default=60)
+
 DB_USER = config("DB_USER", cast=str)
 DB_PASSWORD = config("DB_PASSWORD", cast=Secret)
 DB_SERVER = config("DB_SERVER", cast=str, default="localhost")

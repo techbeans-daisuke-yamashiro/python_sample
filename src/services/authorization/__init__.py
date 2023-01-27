@@ -1,9 +1,12 @@
+from typing import List
 from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from fastapi_jwt_auth import AuthJWT
 
 from config import SECRET_KEY
 from passlib.context import CryptContext
+
+import base64
 
 hash_password_context = CryptContext(schemes=["bcrypt"],deprecated="auto")
 ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes
@@ -32,7 +35,7 @@ class UserLogin(BaseModel):
         }
 
 class Settings(BaseModel):
-    auth_jwt_key: str = "56c2067bf62d2b98d9741466d877e95a3341a846b05c08909a9b915b1229f859"
+    authjwt_secret_key: str = str(SECRET_KEY)
 
 class UserLoginResponse(BaseModel):
     access_token: str
