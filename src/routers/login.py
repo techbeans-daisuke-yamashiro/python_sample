@@ -9,9 +9,14 @@ from fastapi_jwt_auth import AuthJWT
 from pydantic import BaseModel
 from sqlmodel import Session, select
 from database import get_session
-from errors import ApiException
+from errors import ApiException,extract_errors
 from services.authorization import UserLogin,UserLoginResponse,HashedPassword
 
+#Generate Custom Responce in this controller
+UserLoginError = ApiException(status_code=401, message='Login Failed')
+successful = {200:{'description': 'Login successfully'}}
+login_user_responces = extract_errors([UserLoginError])
+login_user_responces.update(successful)
 
 LoginRouter = APIRouter(
     prefix="/login",
@@ -19,7 +24,7 @@ LoginRouter = APIRouter(
 )
 
 @LoginRouter.post('/',response_model=UserLoginResponse
-    , responses=error_response([InvalidPasswordError,UserNotFoundError]))
+    , responses=login_user_responces)
 def login(user:UserLogin, Authorize:AuthJWT=Depends(),
     session: Session=Depends(get_session)):
     validate_user = session.exec(
@@ -35,6 +40,6 @@ def login(user:UserLogin, Authorize:AuthJWT=Depends(),
         user_login_response.refresh_token = Authorize.create_refresh_token()
         return {'access_token':access_token}
     elif(validate_user is None):
-        raise ApiException(status_code=404,message='invalid Email')
+        raise UserLoginError
     elif(validate_user['password'] == user.password):
-       raise ApiException(status_code=401,message='invalid Password')
+       raise UserLoginError

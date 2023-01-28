@@ -6,14 +6,20 @@ from fastapi.responses import Response, ORJSONResponse
 #from fastapi.encoders import jsonable_encoder
 from sqlmodel import Session, select
 from database import get_session
-from errors import ItemNotFoundError, error_response
+from errors import ApiException, SystemExeption, extract_system_exception, extract_errors
 ItemRouter = APIRouter(
     prefix="/item",
     tags=["item"]
 )
+#Generate Custom Responce in this controller
+ItemNotFoundError = ApiException(status_code=404, message='Target item Not Found')
+s=extract_system_exception(SystemExeption(Exception))
+successful = {200:{'description': 'operation done successfully'}}
+find_item_responces = extract_errors([ItemNotFoundError, SystemExeption])
+find_item_responces.update(successful)
 
-
-@ItemRouter.get('/{id}/get', response_model=ItemRead)
+@ItemRouter.get('/{id}/get', response_model=ItemRead,
+    responses=find_item_responces)
 def select_item(id: int, session: Session = Depends(get_session)):
     data = session.get(Item, id)
     
@@ -25,7 +31,8 @@ def select_item(id: int, session: Session = Depends(get_session)):
     return data
 
 
-@ItemRouter.get('/all', response_model=List[ItemRead])
+@ItemRouter.get('/all', response_model=List[ItemRead],
+    responses=find_item_responces)
 def select_all_items(session: Session = Depends(get_session)):
     # soft-delete query
     data = session.exec(select(Item).where(Item.deleted_at is None)).all()
@@ -35,9 +42,7 @@ def select_all_items(session: Session = Depends(get_session)):
 
 
 @ItemRouter.patch('/update', response_model=ItemUpdate,
-    responses={ 200: {'description': 'operation done successfully'}, 
-    404: {'description': 'Target item Not Found'}})
-
+    responses=find_item_responces)
 def update_item(item: ItemUpdate, session: Session = Depends(get_session)):
     target_item = session.get(Item, item.id)
     if not target_item:
@@ -61,8 +66,7 @@ def create_item(item: ItemCreate, session: Session = Depends(get_session)):
 
 #hard delete endppoint
 @ItemRouter.delete('/{id}/delete', response_class=ORJSONResponse,
-    responses={200:{'description': 'operation done successfully'}, 
-    404:{'description': 'Item Not Found'} })
+    responses=find_item_responces)
 def hard_delete_item(id: int, session: Session = Depends(get_session)):
     target_item = session.get(Item, id)
     if not target_item:
@@ -72,7 +76,7 @@ def hard_delete_item(id: int, session: Session = Depends(get_session)):
     return ORJSONResponse(content={'message': 'operation done.'})
 
 @ItemRouter.post('/{id}/delete', response_class=ORJSONResponse,
-    responses=error_response([ItemNotFoundError]))
+    responses = find_item_responces)
 def soft_delete_item(id: int, session: Session = Depends(get_session)):
     target_item = session.get(Item, id)
     if not target_item:

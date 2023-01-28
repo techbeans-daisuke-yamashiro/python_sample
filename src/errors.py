@@ -29,7 +29,7 @@ class SystemExeption(Exception):
 class HttpRequestMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
         try:
-            response: = await call_next(request)
+            response = await call_next(request)
         except ApiException as ae:
             response = JSONResponse(ae.detail, status_code=ae.status_code)
         except Exception as e:
@@ -38,4 +38,17 @@ class HttpRequestMiddleware(BaseHTTPMiddleware):
         return response
 
 def extract_errors(exceptions: List[Exception]) -> dict:
-    pass
+    data ={}
+    for e in exceptions:
+        e = dict(e.detail)['error']
+        s = e['status_code']
+        m = e['message']
+        if data.get(s) is None:
+            data[s]={'description': m}
+        else:
+            data[s]['description'] += f'<br>{m}'
+    return data
+
+def extract_system_exeption(e:SystemExeption = SystemExeption(Exception)):
+    return { e.status_code: {'description':{e.detail['error']['message']}}}
+    
