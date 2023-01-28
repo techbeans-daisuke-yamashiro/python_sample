@@ -1,46 +1,41 @@
 from typing import Optional, Tuple, List, Type
+from fastapi import status, Response, Request
+from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+import traceback
 
+#カスタムAPIエラーの基底となるクラス
+class ApiException(Exception):
+    defaut_status_code: int = status.HTTP_400_BAD_REQUEST
+    defaut_message: str = 'Bad Request'
 
-class ApiError(Exception):
-    """ エラーの基底となるクラス """
-    status_code: int = 400
-    detail: str = 'API error'  # エラー概要
+    def __init__(self,
+            status_code:Optional[int]=defaut_status_code,
+            message:Optional[str]=defaut_message) -> None:
+        self.nessage = message
+        self.status_code = status_code
+        self.detail ={'error': {'status_code': status_code, 'message': message}}
 
-    def __init__(self, reason: Optional[str] = None):
-        if reason:
-            self.reason = reason
+#システムIエラーの基底となるクラス
+class SystemExeption(Exception):
+    def __init__(self, e:Exception) -> None:
+        self.exception = e
+        self.stack_trace = traceback.format_exc()
+        self.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        self.detail = {
+            'error': {'status_code': status.HTTP_500_INTERNAL_SERVER_ERROR,
+            'message': 'system error.'}}
 
-    def __str__(self):
-        return f'{self.detail}\n{self.reason}'
+class HttpRequestMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next) -> Response:
+        try:
+            response: = await call_next(request)
+        except ApiException as ae:
+            response = JSONResponse(ae.detail, status_code=ae.status_code)
+        except Exception as e:
+            se = SystemExeption(e)
+            response = JSONResponse(se.detail,status_code=se.status_code)
+        return response
 
-
-class ItemNotFoundError(ApiError):
-    status_code = 404
-    detail={'Item Not Found'}
-
-class InvalidPasswordError(ApiError):
-    status_code = 401
-    detail={'Invalid Password'}
-
-class UserNotFoundError(ApiError):
-    status_code = 404
-    detail={'Item Not Found'}
-
-def error_response(error_types: List[Type[ApiError]]) -> dict:
-    # error_types に列挙した ApiError を OpenAPI の書式で定義する
-    d = {}
-    for et in error_types:
-        if not d.get(et.status_code):
-            d[et.status_code] = {
-                'description': f'"{et.detail}"',
-                'content': {
-                    'application/json': {
-                        'example': {
-                            'detail': et.detail
-                        }
-                    }
-                }}
-        else:
-            # 同じステータスコードなら description へ追記
-            d[et.status_code]['description'] += f'<br>"{et.detail}"'
-    return d
+def extract_errors(exceptions: List[Exception]) -> dict:
+    pass

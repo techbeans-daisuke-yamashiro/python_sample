@@ -1,16 +1,12 @@
 from typing import List
-from fastapi import FastAPI, Depends, HTTPException
+#from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from fastapi_jwt_auth import AuthJWT
 
-from config import SECRET_KEY
+from config import SECRET_KEY,ACCESS_TOKEN_EXPIRES_IN,REFRESH_TOKEN_EXPIRES_IN
 from passlib.context import CryptContext
 
-import base64
-
 hash_password_context = CryptContext(schemes=["bcrypt"],deprecated="auto")
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes
-REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7 # 7 days
 ALGORITHM = "HS256"
 
 class HashedPassword():
@@ -36,9 +32,12 @@ class UserLogin(BaseModel):
 
 class Settings(BaseModel):
     authjwt_secret_key: str = str(SECRET_KEY)
+    authjwt_access_token_expires: int = ACCESS_TOKEN_EXPIRES_IN
+    authjwt_refresh_token_expires: int = REFRESH_TOKEN_EXPIRES_IN
 
 class UserLoginResponse(BaseModel):
     access_token: str
+    refresh_token: str
 
 @AuthJWT.load_config
 def get_config():

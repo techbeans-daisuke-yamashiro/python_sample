@@ -4,7 +4,6 @@ from .models import Item, User
 from services.authorization import HashedPassword
 from typing import Optional
 from sqlmodel import SQLModel, Session, create_engine,select
-from starlette.requests import Request
 
 #Connecting to Database
 engine = create_engine(DATABASE_URL, echo=DB_ECHO) 
@@ -39,7 +38,7 @@ def create_seed_data():
     else:
         print("skipped seeding table \'user\'")
 
-    if len(seeded_items)==0 is not None:
+    if len(seeded_items) == 0:
         items =[
             Item(name="Apple",  price=10, country='JP',seeded=True),
             Item(name="Orange", price=15, country='ES',seeded=True),

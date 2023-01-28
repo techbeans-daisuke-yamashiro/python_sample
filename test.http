@@ -1,0 +1,22 @@
+@server=localhost
+@base_url=http://{{server}}
+@email=alice`@example.com
+@password=password
+
+
+# @name login
+POST {{base_url}}/login/ HTTP/1.1
+Content-Type: application/json
+
+{"email":"{{email}}","password":"{{password}}"}
+
+###
+@access_token=Bearer {{login.response.body.$.access_token}}
+
+# @name protected
+get {{base_url}}/protected HTTP/1.1
+Authorization: {{access_token}}
+###
+# @name all_user
+get {{base_url}}/user/all HTTP/1.1
+Authorization: {{access_token}}
