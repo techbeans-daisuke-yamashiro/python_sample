@@ -49,6 +49,6 @@ def extract_errors(exceptions: List[Exception]) -> dict:
             data[s]['description'] += f'<br>{m}'
     return data
 
-def extract_system_exeption(e:SystemExeption = SystemExeption(Exception)):
+def extract_system_exception(e:SystemExeption = SystemExeption(Exception)):
     return { e.status_code: {'description':{e.detail['error']['message']}}}
     

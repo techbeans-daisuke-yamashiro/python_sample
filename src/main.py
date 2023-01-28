@@ -22,4 +22,6 @@ def read_root():
 def init_app():
     create_db_and_tables()
 
+# add errorHandler with custom errors
 app.add_middleware(HttpRequestMiddleware)
+

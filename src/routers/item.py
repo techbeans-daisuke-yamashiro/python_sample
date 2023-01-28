@@ -15,7 +15,7 @@ ItemRouter = APIRouter(
 ItemNotFoundError = ApiException(status_code=404, message='Target item Not Found')
 s=extract_system_exception(SystemExeption(Exception))
 successful = {200:{'description': 'operation done successfully'}}
-find_item_responces = extract_errors([ItemNotFoundError, SystemExeption])
+find_item_responces = extract_errors([ItemNotFoundError])
 find_item_responces.update(successful)
 
 @ItemRouter.get('/{id}/get', response_model=ItemRead,
