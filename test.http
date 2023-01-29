@@ -18,5 +18,5 @@ get {{base_url}}/protected HTTP/1.1
 Authorization: {{access_token}}
 ###
 # @name all_user
-get {{base_url}}/user/all HTTP/1.1
+get {{base_url}}/api/item/all HTTP/1.1
 Authorization: {{access_token}}

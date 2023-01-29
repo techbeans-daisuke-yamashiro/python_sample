@@ -24,7 +24,8 @@ class SystemExeption(Exception):
         self.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         self.detail = {
             'error': {'status_code': status.HTTP_500_INTERNAL_SERVER_ERROR,
-            'message': 'system error.'}}
+            'message': 'system error.',
+            'stack_trace':self.stack_trace}}
 
 class HttpRequestMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:

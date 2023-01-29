@@ -34,7 +34,8 @@ def select_item(id: int, session: Session = Depends(get_session)):
     responses=find_item_responces)
 def select_all_items(session: Session = Depends(get_session)):
     # soft-delete query
-    data = session.exec(select(Item).where(Item.deleted_at is None)).all()
+    data = session.exec(select(Item).where(Item.deleted_at == None)).all()
+    print(data)
     if not data:
         raise ItemNotFoundError
     return data
