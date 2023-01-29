@@ -17,6 +17,10 @@ Content-Type: application/json
 get {{base_url}}/protected HTTP/1.1
 Authorization: {{access_token}}
 ###
+# @name optional
+get {{base_url}}/optional HTTP/1.1
+Authorization: {{access_token}}
+###
 # @name all_user
 get {{base_url}}/api/item/all HTTP/1.1
 Authorization: {{access_token}}
