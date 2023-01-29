@@ -19,13 +19,13 @@ class HashedPassword():
         return hash_password_context.hash(plain)
 
 class UserLogin(BaseModel):
-    email: str
+    name: str
     password: str 
 
     class Config:
         shema_extra={
             'example':{
-                'email': 'user@example.com',
+                'name': 'name',
                 'password': 'password'
             }
         }

@@ -17,6 +17,7 @@ DB_PORT = config("DB_PORT", cast=str, default="5432")
 DB_NAME = config("DB_NAME", cast=str)
 DB_ENGINE = config("DB_ENGINE", cast=str)
 DB_ECHO = config("DB_ECHO",cast=bool,default=False)
+DEBUG = config("DEBUG",cast=bool,default=False)
 
 DATABASE_URL = config(
     "DATABASE_URL",

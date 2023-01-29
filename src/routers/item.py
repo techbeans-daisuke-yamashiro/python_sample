@@ -6,14 +6,13 @@ from fastapi.responses import Response, ORJSONResponse
 #from fastapi.encoders import jsonable_encoder
 from sqlmodel import Session, select
 from database import get_session
-from errors import ApiException, SystemExeption, extract_system_exception, extract_errors
+from errors import ApiException, SystemExeption, extract_errors
 ItemRouter = APIRouter(
     prefix="/item",
     tags=["item"]
 )
 #Generate Custom Responce in this controller
 ItemNotFoundError = ApiException(status_code=404, message='Target item Not Found')
-s=extract_system_exception(SystemExeption(Exception))
 successful = {200:{'description': 'operation done successfully'}}
 find_item_responces = extract_errors([ItemNotFoundError])
 find_item_responces.update(successful)

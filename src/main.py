@@ -4,11 +4,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from database import create_db_and_tables, create_seed_data
 from errors import HttpRequestMiddleware
+from config import DEBUG
 
 from routers import APIRoot
 from routers.login import LoginRouter
 #initialize FastAPI
-app = FastAPI()
+app = FastAPI(debug=DEBUG)
 app.mount("/assets", StaticFiles(directory="assets"), name="static")
 app.include_router(APIRoot)
 app.include_router(LoginRouter)
@@ -24,4 +25,3 @@ def init_app():
 
 # add errorHandler with custom errors
 app.add_middleware(HttpRequestMiddleware)
-

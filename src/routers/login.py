@@ -1,4 +1,5 @@
 from datetime import datetime
+from pprint import pprint
 from typing import List,Optional
 from database import get_session
 from database.models import User, UserUpdate, UserCreate, UserRead
@@ -27,19 +28,22 @@ LoginRouter = APIRouter(
     , responses=login_user_responces)
 def login(user:UserLogin, Authorize:AuthJWT=Depends(),
     session: Session=Depends(get_session)):
-    validate_user = session.exec(
-        select(User).where(User.email==user.email)).first()
-    if (validate_user is not None) and HashedPassword.verify(user.password, validate_user.password):
+    u = session.exec(
+        select(User).where(User.name==user.name)).first()
+    pprint(f'recived user {user.name}/{user.password}')
+    pprint(f'Got user={u}')
+    if (u is not None) and HashedPassword.verify(user.password, u.password):
+        print('password valid.')
         identity ={
-            'user_id': user.id,
-            'user_name': user.name,
+            'user_id': u.id,
+            'user_name': u.name,
         }
-        user_login_response = UserLoginResponse()
-        user_login_response.access_token = Authorize.create_access_token(
-            identity=identity)
-        user_login_response.refresh_token = Authorize.create_refresh_token()
-        return {'access_token':access_token}
-    elif(validate_user is None):
+        user_login_response = UserLoginResponse(
+            access_token = Authorize.create_access_token(subject=u.email),
+            refresh_token = Authorize.create_refresh_token(subject=u.email))
+        #user_login_response.refresh_token = Authorize.create_refresh_token()
+        return user_login_response
+    elif(u is None):
         raise UserLoginError
-    elif(validate_user['password'] == user.password):
+    elif(u['password'] == user.password):
        raise UserLoginError
